@@ -1,6 +1,7 @@
 import { recoilPersist } from 'recoil-persist'
 import { atom, selector } from 'recoil'
 import axios from 'axios'
+import { find } from 'lodash'
 const { persistAtom } = recoilPersist()
 
 //recoil state 생성
@@ -40,8 +41,18 @@ export const searchMoviesListAtom = selector({
     console.log(data, 'response')
     if (data.Response === 'True') {
       // 즐겨찾기 데이터 결합 후 movieListAtom 담기
-      //const FavoriteList = get(FavoriteListAtom) // 동기적으로 호출한다.
-      return data.Search
+      const favoriteList = get(FavoriteListAtom) // 동기적으로 호출한다.
+      const newDate = data.Search.map(movie => {
+        //"imdbID":
+        const target = find(favoriteList, { imdbID: movie.imdbID }) || false
+        console.log(target, 'ttttt')
+        movie.favorite = !target ? false : true
+        return movie
+      })
+
+      console.log(newDate, 'newData')
+
+      return newDate
     } else {
       return []
     }
