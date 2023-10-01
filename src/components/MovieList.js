@@ -1,8 +1,9 @@
 import { useRecoilState } from 'recoil'
 import { FavoriteListAtom, searchMoviesListAtom } from '../services/Atom'
 import Modal from './Modal'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { isNull } from 'lodash'
+import { useIntersectionObserver } from '../hook/useIntersectionObserver'
 
 const MovieList = () => {
   // 해당 컴포넌트 영화 데이터 구독
@@ -19,7 +20,7 @@ const MovieList = () => {
     console.log(movie, '릭')
     setIsOpen(movie)
   }
-
+  //const setObservationTarget = useIntersectionObserver(fetchMoreComments)
   return (
     <div>
       {movieList.length === 0 ? (
@@ -36,6 +37,7 @@ const MovieList = () => {
               <p>{item.Type}</p>
             </div>
           ))}
+          <div ref={setObservationTarget}></div>
         </>
       )}
       {!isNull(isOpen) && <Modal close={() => setIsOpen(null)} handler={() => setFavoriteListAtom(isOpen)} />}
