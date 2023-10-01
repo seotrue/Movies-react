@@ -1,11 +1,32 @@
-import { useSetRecoilState, useRecolValue } from 'recoil'
-import { contentStateAtom } from '../services/Atom'
+import useInput from '../hook/useInput'
+import { Input } from './styledComponents'
+import { movieListQueryAtom } from '../services/Atom'
+import { useRecoilState } from 'recoil'
 const Search = () => {
-  //recoil 사용 선언부
-  const setContent = useSetRecoilState(contentStateAtom)
-  const content = useRecolValue(contentStateAtom)
+  const [searchKeyword, onChangeSearchKeyword] = useInput('')
+  const [MovieListQuery, setMovieListQuery] = useRecoilState(movieListQueryAtom)
+  // movieListQueryAtom
 
-  return <div></div>
+  const handleSearchMovie = () => {
+    console.log(MovieListQuery, '영화 검색!')
+    // movieListQueryAtom 쿼리 디스패치
+    setMovieListQuery({
+      keyword: searchKeyword,
+      page: 1,
+    })
+  }
+
+  return (
+    <div>
+      <Input
+        placeholder={'영화를 검색해 주세요'}
+        value={searchKeyword}
+        onChange={onChangeSearchKeyword}
+        width={'150px'}
+      />
+      <div onClick={handleSearchMovie}>버튼</div>
+    </div>
+  )
 }
 
 export default Search

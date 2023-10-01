@@ -2,10 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './layouts/Layout'
 import Favorite from './page/Favorite'
 import { RecoilRoot } from 'recoil'
-
-function Home() {
-  return null
-}
+import Home from './page/Home'
 
 function App() {
   return (
@@ -15,7 +12,7 @@ function App() {
           <Route>
             <Route element={<Layout />}>
               <Route path='/' element={<Home />} />
-              <Route path='favorite' element={<Favorite />} />
+              <Route path='/favorite' element={<Favorite />} />
             </Route>
           </Route>
         </Routes>

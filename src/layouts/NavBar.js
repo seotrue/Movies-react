@@ -16,7 +16,7 @@ const NavBar = () => {
         검색
       </NavLink>
       <NavLink
-        to='/'
+        to='/favorite'
         onClick={handleClickNav}
         activeStyle={{
           fontWeight: 'bold',

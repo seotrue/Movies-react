@@ -2,10 +2,11 @@ import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 const AsyncWrapper = props => {
-  const { children, errorFallback, suspenseFallback, resetErrorBoundary } = props
+  // eslint-disable-next-line react/prop-types
+  const { children, errorFallback, suspenseFallback } = props
 
   return (
-    <ErrorBoundary FallbackComponent={errorFallback} onReset={resetErrorBoundary}>
+    <ErrorBoundary FallbackComponent={errorFallback}>
       <Suspense fallback={suspenseFallback}>{children}</Suspense>
     </ErrorBoundary>
   )
