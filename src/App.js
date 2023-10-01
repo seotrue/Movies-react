@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './layouts/Layout'
 import Favorite from './page/Favorite'
+import { RecoilRoot } from 'recoil'
 
 function Home() {
   return null
@@ -8,16 +9,18 @@ function Home() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route>
-          <Route element={<Layout />}>
-            <Route path='/' element={<Home />} />
-            <Route path='favorite' element={<Favorite />} />
+    <RecoilRoot>
+      <BrowserRouter>
+        <Routes>
+          <Route>
+            <Route element={<Layout />}>
+              <Route path='/' element={<Home />} />
+              <Route path='favorite' element={<Favorite />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </RecoilRoot>
   )
 }
 
