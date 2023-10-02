@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useIntersectionObserver } from '../hook/useIntersectionObserver'
 import Modal from './Modal'
 import { cloneDeep, findIndex, isNull } from 'lodash'
+import { CardView } from './styledComponents'
 
 const MovieList = () => {
   // 해당 컴포넌트 영화 데이터 구독
@@ -58,9 +59,9 @@ const MovieList = () => {
       {movieList.length === 0 ? (
         <div>검색 결과가 없습니다.</div>
       ) : (
-        <>
+        <CardView>
           {movieList.map((item, idx) => (
-            <div key={idx} onClick={() => handleOpenFavoriteModal(item)}>
+            <div className={'card'} key={idx} onClick={() => handleOpenFavoriteModal(item)}>
               {/*각 영화 아이템은 위쪽에 영화 포스터 이미지, 아래쪽에 영화 제목, 연도, 타입이 표시됩니다.*/}
               <img src={item.Poster} alt='img' />
               {item.favorite && <p>즐겨찾기</p>}
@@ -70,7 +71,7 @@ const MovieList = () => {
             </div>
           ))}
           <div ref={setObservationTarget}></div>
-        </>
+        </CardView>
       )}
       {!isNull(isOpen) && <Modal open={isOpen} close={() => setIsOpen(null)} onFavoriteToggle={handleFavoriteToggle} />}
     </div>

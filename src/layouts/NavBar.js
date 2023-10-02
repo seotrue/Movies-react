@@ -1,31 +1,18 @@
 import { NavLink } from 'react-router-dom'
+import { FootTab } from '../components/styledComponents'
 
 const NavBar = () => {
   const handleClickNav = () => {}
 
   return (
-    <div className={'navBarMenu'}>
-      <NavLink
-        to='/'
-        onClick={handleClickNav}
-        activeStyle={{
-          fontWeight: 'bold',
-          color: 'red',
-        }}
-      >
+    <FootTab>
+      <NavLink className={props => (props.isActive ? 'nav active' : 'nav')} to='/' onClick={handleClickNav}>
         검색
       </NavLink>
-      <NavLink
-        to='/favorite'
-        onClick={handleClickNav}
-        activeStyle={{
-          fontWeight: 'bold',
-          color: 'red',
-        }}
-      >
+      <NavLink className={props => (props.isActive ? 'nav active' : 'nav')} to='/favorite' onClick={handleClickNav}>
         즐겨찾기
       </NavLink>
-    </div>
+    </FootTab>
   )
 }
 

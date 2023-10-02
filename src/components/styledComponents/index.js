@@ -31,15 +31,54 @@ const inputStyle = css`
     background: #ffffff;
   }
 `
+
+export const SearBar = styled.div`
+  position: fixed;
+  width: 90%;
+  top: 20px;
+`
+
+export const FootTab = styled.div`
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+  bottom: 0;
+  left: 0;
+
+  .nav {
+    float: left;
+    width: 50%;
+    height: 50px;
+    line-height: 50px;
+    text-decoration: none;
+    text-align: center;
+    background: #565685;
+    color: aliceblue;
+
+    &.active {
+      background: black;
+      font-weight: bold;
+    }
+  }
+`
+
 export const Input = styled.input`
   ${inputStyle};
   color: ${props => props.color};
-  width: ${props => props.width};
+  width: 100%;
   padding: 9px 20px 9px;
 `
 
-export const Card = styled.div`
+export const CardView = styled.div`
   display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  .card {
+    width: 45%;
+    img {
+      width: 100%;
+    }
+  }
 `
 export const ModalBackdrop = styled.div`
   position: fixed;

@@ -1,5 +1,5 @@
 import useInput from '../hook/useInput'
-import { Input } from './styledComponents'
+import { Input, SearBar } from './styledComponents'
 import { MovieListQueryAtom } from '../services/Atom'
 import { useRecoilState } from 'recoil'
 const Search = () => {
@@ -20,7 +20,7 @@ const Search = () => {
   }
 
   return (
-    <div>
+    <SearBar>
       <Input
         placeholder={'영화를 검색해 주세요'}
         value={searchKeyword}
@@ -28,7 +28,7 @@ const Search = () => {
         width={'150px'}
       />
       <div onClick={e => handleSearchMovie(e)}>버튼</div>
-    </div>
+    </SearBar>
   )
 }
 
