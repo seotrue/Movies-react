@@ -1,21 +1,31 @@
 import ReactDom from 'react-dom'
+import { ModalBackdrop, ModalWrap } from './styledComponents'
 
 const Backdrop = () => {
-  return <div id='overlay'></div>
+  return <ModalBackdrop id='overlay' />
 }
 
-const Modal = ({ close, handler, params }) => {
+const Modal = ({ open, close, onFavoriteToggle }) => {
+  const closeModal = () => {
+    close()
+  }
+
+  const favoriteToggle = () => {
+    console.log(open, 'open')
+    //open.favorite = !open.favorite
+    onFavoriteToggle(open)
+  }
+
   return (
     <>
       {ReactDom.createPortal(<Backdrop />, document.getElementById('backdrop-root'))}
       {ReactDom.createPortal(
-        <div id='modal'>
-          <h1>modal</h1>
+        <ModalWrap id='modal'>
           <div>
-            <button onClick={() => close}>취소</button>
-            <button onClick={() => handler(params)}>{params ? '즐겨찾기 제거' : '즐겨찾기'}</button>
+            <button onClick={closeModal}>취소</button>
+            <button onClick={favoriteToggle}>{open.favorite ? '즐겨찾기 제거' : '즐겨찾기'}</button>
           </div>
-        </div>,
+        </ModalWrap>,
         document.getElementById('modal-root'),
       )}
     </>

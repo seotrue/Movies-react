@@ -5,32 +5,35 @@ import { find } from 'lodash'
 const { persistAtom } = recoilPersist()
 
 //recoil state 생성
-export const movieListAtom = atom({
-  key: 'movieList',
+export const MovieListAtom = atom({
+  key: 'MovieListAtom',
   default: [],
   effects_UNSTABLE: [persistAtom], // 새로고침 유지하고 싶은 atom에 추가
 })
 
-export const movieListQueryAtom = atom({
-  key: 'movieListQueryAtom',
+export const MovieListQueryAtom = atom({
+  key: 'MovieListQueryAtom',
   default: {
     keyword: '',
     page: 1,
   },
 })
 
-// 서버데이터 즐겨찾기 데이터와 결화
+export const MaxPageAtom = atom({ key: 'MaxPageAtom', default: 1 })
+
+// 서버데이터 즐겨찾기 데이터와 결합
 export const FavoriteListAtom = atom({
   key: 'FavoriteListAtom',
   default: [],
   effects_UNSTABLE: [persistAtom],
 })
 
-export const searchMoviesListAtom = selector({
-  key: 'searchMovies',
+export const SearchMoviesListAtom = selector({
+  key: 'SearchMoviesListAtom',
   get: async ({ get }) => {
     const url = 'http://www.omdbapi.com/?apikey=92e32667'
-    const searchParams = get(movieListQueryAtom)
+    const searchParams = get(MovieListQueryAtom)
+    const baseList = get(MovieListAtom)
     console.log(searchParams, 'api 호출 전:::::::')
     const { data } = await axios.get(url, {
       params: {
@@ -45,16 +48,17 @@ export const searchMoviesListAtom = selector({
       const newDate = data.Search.map(movie => {
         //"imdbID":
         const target = find(favoriteList, { imdbID: movie.imdbID }) || false
-        console.log(target, 'ttttt')
         movie.favorite = !target ? false : true
         return movie
       })
-
-      console.log(newDate, 'newData')
-
-      return newDate
+      return [...baseList, ...newDate]
     } else {
-      return []
+      return baseList
     }
   },
+  // set: ({ set, get }, newValue) => {
+  //   // 원본훼손O
+  //   // set(Aatom, newValue) // Aatom = newValue 이런식으로, 기존값 무시하고 재할당된다.
+  //   set(MovieListAtom, newValue) // B 버튼 2번) Aatom = Aatom + newValue 이런식으로, count = count + 1 의 방식을 유지할 수 있다.
+  // },
 })
