@@ -37,7 +37,6 @@ export const SearBar = styled.div`
   width: 90%;
   top: 20px;
 `
-
 export const FootTab = styled.div`
   position: fixed;
   width: 100%;
@@ -61,7 +60,6 @@ export const FootTab = styled.div`
     }
   }
 `
-
 export const Input = styled.input`
   ${inputStyle};
   color: ${props => props.color};
@@ -71,8 +69,10 @@ export const Input = styled.input`
 
 export const CardView = styled.div`
   display: flex;
+  padding-top: 50px;
   justify-content: space-between;
   flex-wrap: wrap;
+  text-align: center;
   .card {
     width: 45%;
     img {

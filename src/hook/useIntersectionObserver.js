@@ -4,9 +4,10 @@ export const useIntersectionObserver = callback => {
   const [observationTarget, setObservationTarget] = useState(null)
   const observer = useRef(
     new IntersectionObserver(
-      ([entry]) => {
+      ([entry], observer) => {
         if (!entry.isIntersecting) return
         callback()
+        observer.unobserve(entry.target)
       },
       { threshold: 1 },
     ),
@@ -21,6 +22,7 @@ export const useIntersectionObserver = callback => {
     return () => {
       if (currentTarget) {
         currentObserver.unobserve(currentTarget)
+        currentObserver.disconnect()
       }
     }
   }, [observationTarget])

@@ -1,33 +1,40 @@
-import { useRecoilState } from 'recoil'
-import { FavoriteListAtom, MovieListAtom, MovieListQueryAtom, SearchMoviesListAtom } from '../services/Atom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { FavoriteListAtom, MovieListAtom, MovieListQueryAtom, TotalPageAtom } from '../services/Atom'
 import { useCallback, useEffect, useState } from 'react'
 import { useIntersectionObserver } from '../hook/useIntersectionObserver'
 import Modal from './Modal'
-import { cloneDeep, findIndex, isNull } from 'lodash'
+import { cloneDeep, findIndex, isEmpty, isNull } from 'lodash'
 import { CardView } from './styledComponents'
 
 const MovieList = () => {
   // 해당 컴포넌트 영화 데이터 구독
   //recoil 사용 선언부
-  const [movieList] = useRecoilState(SearchMoviesListAtom)
-  const [prevList, setMovieList] = useRecoilState(MovieListAtom)
+  const [movieList, setMovieList] = useRecoilState(MovieListAtom)
   const [, setMovieListQuery] = useRecoilState(MovieListQueryAtom)
   const [, setFavoriteListAtom] = useRecoilState(FavoriteListAtom)
+  const totalPage = useRecoilValue(TotalPageAtom)
   const [isOpen, setIsOpen] = useState(null)
+  //const [scroll, setScroll] = useState(false)
+  const [addListData, setAddListData] = useState([])
+
+  //const [updateDate, setUpdateDate] = useState(searchData)
 
   useEffect(() => {
-    console.log(movieList, prevList, 'movieList, prevList')
-    // if (!isEqual(movieList, prevList)) {
-    //   setMovieListAtom(prevState => [...prevState, ...movieList])
-    // }
-  }, [])
+    console.log(movieList, 'useEffect: movieList')
+    console.log(addListData, 'useEffect: addListData')
+    console.log(totalPage, 'useEffect: totalPage')
+    // 검색후 첫 진입시 List 데이터 리셋
+    // setMovieList(searchData)
+    setAddListData(prevState => [...prevState, ...movieList])
+  }, [movieList])
 
   const callback = useCallback(() => {
     setMovieListQuery(prevState => ({
       ...prevState,
       page: prevState.page + 1,
     }))
-  }, [setMovieListQuery])
+    setMovieList([...addListData])
+  }, [setMovieListQuery, addListData])
 
   const setObservationTarget = useIntersectionObserver(callback)
 
@@ -55,13 +62,18 @@ const MovieList = () => {
   }
 
   return (
-    <div>
-      {movieList.length === 0 ? (
+    <CardView>
+      {isEmpty(addListData) ? (
         <div>검색 결과가 없습니다.</div>
       ) : (
-        <CardView>
-          {movieList.map((item, idx) => (
-            <div className={'card'} key={idx} onClick={() => handleOpenFavoriteModal(item)}>
+        <>
+          {addListData.map((item, idx) => (
+            <div
+              className={'card'}
+              key={idx}
+              onClick={() => handleOpenFavoriteModal(item)}
+              ref={idx === addListData.length - 1 ? setObservationTarget : null}
+            >
               {/*각 영화 아이템은 위쪽에 영화 포스터 이미지, 아래쪽에 영화 제목, 연도, 타입이 표시됩니다.*/}
               <img src={item.Poster} alt='img' />
               {item.favorite && <p>즐겨찾기</p>}
@@ -70,11 +82,11 @@ const MovieList = () => {
               <p>{item.Type}</p>
             </div>
           ))}
-          <div ref={setObservationTarget}></div>
-        </CardView>
+          {/*{scroll && <div ref={setObservationTarget} style={{ width: '1px' }}></div>}*/}
+        </>
       )}
       {!isNull(isOpen) && <Modal open={isOpen} close={() => setIsOpen(null)} onFavoriteToggle={handleFavoriteToggle} />}
-    </div>
+    </CardView>
   )
 }
 
