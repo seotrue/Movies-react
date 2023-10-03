@@ -8,7 +8,7 @@ const { persistAtom } = recoilPersist()
 export const MovieListAtom = atom({
   key: 'MovieListAtom',
   default: [],
-  effects_UNSTABLE: [persistAtom], // 새로고침 유지하고 싶은 atom에 추가
+  //effects_UNSTABLE: [persistAtom], // 새로고침 유지하고 싶은 atom에 추가
 })
 
 export const MovieListQueryAtom = atom({
@@ -16,6 +16,7 @@ export const MovieListQueryAtom = atom({
   default: {
     keyword: '',
     page: 1,
+    sameKeyword: false,
   },
 })
 
@@ -39,8 +40,6 @@ export const SearchMoviesListAtom = selector({
         page: searchParams.page,
       },
     })
-    console.log('서치 함수')
-    //const baseList = get(MovieListAtom)
     if (data.Response === 'True') {
       const pageTotal = data.totalResults
       return { data: data.Search || [], pageTotal }
@@ -56,15 +55,11 @@ export const JoinFavoriteAndSearchListAtom = selector({
     // 즐겨찾기 데이터 결합 후 movieListAtom 담기
     const getSearchData = cloneDeep(get(MovieListAtom)) // 동기적으로 호출한다.
     const favoriteList = get(FavoriteListAtom) // 동기적으로 호출한다.
-    console.log(favoriteList, 'ffff')
-    console.log(getSearchData, 'getSearchData Atom')
     const newDate = getSearchData.map(movie => {
       const target = findIndex(favoriteList, { imdbID: movie.imdbID })
       movie.favorite = target > -1 ? true : false
       return movie
     })
-
-    console.log(newDate, 'newDate:::: getg')
 
     return newDate
   },

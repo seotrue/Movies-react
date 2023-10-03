@@ -1,5 +1,11 @@
 import { useRecoilState } from 'recoil'
-import { FavoriteListAtom, JoinFavoriteAndSearchListAtom, MovieListAtom, MovieListQueryAtom } from '../services/Atom'
+import {
+  FavoriteListAtom,
+  JoinFavoriteAndSearchListAtom,
+  MovieListAtom,
+  MovieListQueryAtom,
+  SearchMoviesListAtom,
+} from '../services/Atom'
 import { useCallback, useEffect, useState } from 'react'
 import { useIntersectionObserver } from '../hook/useIntersectionObserver'
 import Modal from './Modal'
@@ -11,40 +17,42 @@ const MovieList = () => {
   // 해당 컴포넌트 영화 데이터 구독
   //recoil 사용 선언부
   const [joinFavoriteAndSearchList] = useRecoilState(JoinFavoriteAndSearchListAtom)
-  const [, setMovieList] = useRecoilState(MovieListAtom)
-  const [, setMovieListQuery] = useRecoilState(MovieListQueryAtom)
+  const [searchData] = useRecoilState(SearchMoviesListAtom)
+  const [movieList, setMovieList] = useRecoilState(MovieListAtom)
+  const [movieListQuery, setMovieListQuery] = useRecoilState(MovieListQueryAtom)
   const [favoriteList, setFavoriteListAtom] = useRecoilState(FavoriteListAtom)
   //const totalPage = useRecoilValue(TotalPageAtom)
   const [isOpen, setIsOpen] = useState(null)
+
   const [addListData, setAddListData] = useState(joinFavoriteAndSearchList)
 
   useEffect(() => {
-    // 검색후 첫 진입시 List 데이터 리셋
-    if (!isEqual(addListData, joinFavoriteAndSearchList)) {
+    if (!isEqual(addListData, movieList)) {
       setAddListData(prev => {
-        const updateDate = cloneDeep([...prev, ...joinFavoriteAndSearchList]).map(v => {
-          const targetIdx = findIndex(favoriteList, { imdbID: v.imdbID })
-          v.favorite = targetIdx > -1 ? true : false
-          return v
-        })
-        return updateDate
+        const sow = movieListQuery.sameKeyword ? prev : []
+        const updateDate = [...sow, ...joinFavoriteAndSearchList]
+
+        const result = updateDate.filter((v, i) => updateDate.findIndex(x => x.imdbID === v.imdbID) === i)
+        return result
       })
       return
     }
-    if (isEmpty(joinFavoriteAndSearchList)) {
-      setAddListData([])
-    }
-  }, [joinFavoriteAndSearchList, favoriteList])
-  console.log(addListData, 'useEffect: addListData')
+  }, [joinFavoriteAndSearchList, favoriteList, movieListQuery])
+  useEffect(() => {
+    const { data = [] } = searchData
+    const sow = movieListQuery.sameKeyword ? addListData : []
+    const updateState = [...sow, ...data]
+    const result = updateState.filter((v, i) => updateState.findIndex(x => x.imdbID === v.imdbID) === i)
+    setMovieList(result)
+  }, [searchData, movieListQuery])
 
   const callback = useCallback(() => {
     setMovieListQuery(prevState => ({
       ...prevState,
       page: prevState.page + 1,
+      sameKeyword: true,
     }))
-    const accumulateArr = [...addListData, ...joinFavoriteAndSearchList]
-    setMovieList(accumulateArr)
-  }, [setMovieListQuery, addListData, joinFavoriteAndSearchList])
+  }, [joinFavoriteAndSearchList])
 
   const setObservationTarget = useIntersectionObserver(callback)
 
@@ -66,15 +74,15 @@ const MovieList = () => {
 
   return (
     <CardView>
-      {isEmpty(addListData) ? (
+      {isEmpty(joinFavoriteAndSearchList) ? (
         <div>검색 결과가 없습니다.</div>
       ) : (
         <>
-          {addListData.map((item, idx) => (
+          {joinFavoriteAndSearchList.map((item, idx) => (
             <MovieItem
               item={item}
               key={idx}
-              refTarget={addListData.length - 1 ? setObservationTarget : null}
+              refTarget={joinFavoriteAndSearchList.length - 1 ? setObservationTarget : null}
               onOpenFavoriteModal={handleOpenFavoriteModal}
             />
           ))}

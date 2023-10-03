@@ -80,12 +80,17 @@ export const CardView = styled.div`
     img {
       width: 100%;
     }
+    .fav-icon {
+      background: coral;
+      color: #fff;
+    }
   }
 `
 export const ModalBackdrop = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 9;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
@@ -94,6 +99,11 @@ export const ModalWrap = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
+  z-index: 10;
+  padding: 100px 25px;
   transform: translate(-50%, -50%);
   background: #fff;
+  button {
+    float: left;
+  }
 `

@@ -2,8 +2,6 @@ import { NavLink } from 'react-router-dom'
 import { FootTab } from '../components/styledComponents'
 
 const NavBar = () => {
-  const handleClickNav = () => {}
-
   return (
     <FootTab>
       <NavLink className={props => (props.isActive ? 'nav active' : 'nav')} to='/' onClick={handleClickNav}>

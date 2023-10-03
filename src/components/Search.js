@@ -30,11 +30,11 @@ const Search = () => {
     e.preventDefault()
     resetCookies([])
     setMovieList([])
-    console.log('리셋?????')
     // movieListQueryAtom 쿼리 디스패치
     setMovieListQuery({
       keyword: searchKeyword,
       page: 1,
+      sameKeyword: false,
     })
   }
 

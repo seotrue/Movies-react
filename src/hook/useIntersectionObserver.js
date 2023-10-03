@@ -22,7 +22,7 @@ export const useIntersectionObserver = callback => {
     return () => {
       if (currentTarget) {
         currentObserver.unobserve(currentTarget)
-        currentObserver.disconnect()
+        //currentObserver.disconnect()
       }
     }
   }, [observationTarget])

@@ -1,18 +1,26 @@
 import ReactDom from 'react-dom'
 import { ModalBackdrop, ModalWrap } from './styledComponents'
+import { useEffect } from 'react'
 
 const Backdrop = () => {
   return <ModalBackdrop id='overlay' />
 }
 
 const Modal = ({ open, close, onFavoriteToggle }) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+          position: fixed; 
+          width: 100%;`
+    return () => {
+      document.body.style.cssText = ''
+    }
+  }, [])
+
   const closeModal = () => {
     close()
   }
 
   const favoriteToggle = () => {
-    console.log(open, 'open')
-    //open.favorite = !open.favorite
     onFavoriteToggle(open)
   }
 
