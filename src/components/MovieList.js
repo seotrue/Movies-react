@@ -21,9 +21,7 @@ const MovieList = () => {
   const [movieList, setMovieList] = useRecoilState(MovieListAtom)
   const [movieListQuery, setMovieListQuery] = useRecoilState(MovieListQueryAtom)
   const [favoriteList, setFavoriteListAtom] = useRecoilState(FavoriteListAtom)
-  //const totalPage = useRecoilValue(TotalPageAtom)
   const [isOpen, setIsOpen] = useState(null)
-
   const [addListData, setAddListData] = useState(joinFavoriteAndSearchList)
 
   useEffect(() => {
@@ -38,6 +36,7 @@ const MovieList = () => {
       return
     }
   }, [joinFavoriteAndSearchList, favoriteList, movieListQuery])
+
   useEffect(() => {
     const { data = [] } = searchData
     const sow = movieListQuery.sameKeyword ? addListData : []

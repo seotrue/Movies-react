@@ -16,7 +16,6 @@ const Search = () => {
   const [searchData] = useRecoilState(SearchMoviesListAtom)
   const [, setMovieList] = useRecoilState(MovieListAtom)
   const setTotalPage = useSetRecoilState(TotalPageAtom)
-  //const resetCookies = useResetRecoilState(MovieListAtom)
   const resetCookies = useResetRecoilState(JoinFavoriteAndSearchListAtom)
 
   useEffect(() => {
