@@ -36,6 +36,8 @@ export const SearBar = styled.div`
   position: fixed;
   width: 90%;
   top: 20px;
+  background: #fff;
+  display: flex;
 `
 export const FootTab = styled.div`
   position: fixed;
@@ -69,7 +71,7 @@ export const Input = styled.input`
 
 export const CardView = styled.div`
   display: flex;
-  padding-top: 50px;
+  padding-top: 100px;
   justify-content: space-between;
   flex-wrap: wrap;
   text-align: center;

@@ -1,23 +1,14 @@
 import { recoilPersist } from 'recoil-persist'
 import { atom, selector } from 'recoil'
 import axios from 'axios'
-import { findIndex } from 'lodash'
+import { cloneDeep, findIndex, isEmpty } from 'lodash'
 const { persistAtom } = recoilPersist()
-
-// ex
-// const currentUserIDState = atom({
-//   key: 'CurrentUserID',
-//   default: selector({
-//     key: 'CurrentUserID/Default',
-//     get: () => myFetchCurrentUserID(),
-//   }),
-// });
 
 //recoil state 생성
 export const MovieListAtom = atom({
   key: 'MovieListAtom',
   default: [],
-  //effects_UNSTABLE: [persistAtom], // 새로고침 유지하고 싶은 atom에 추가
+  effects_UNSTABLE: [persistAtom], // 새로고침 유지하고 싶은 atom에 추가
 })
 
 export const MovieListQueryAtom = atom({
@@ -48,19 +39,40 @@ export const SearchMoviesListAtom = selector({
         page: searchParams.page,
       },
     })
+    console.log('서치 함수')
     //const baseList = get(MovieListAtom)
     if (data.Response === 'True') {
-      // 즐겨찾기 데이터 결합 후 movieListAtom 담기
-      const favoriteList = get(FavoriteListAtom) // 동기적으로 호출한다.
       const pageTotal = data.totalResults
-      const newDate = data.Search.map(movie => {
-        const target = findIndex(favoriteList, { imdbID: movie.imdbID })
-        movie.favorite = target > -1
-        return movie
-      })
-      return { data: newDate || [], pageTotal }
+      return { data: data.Search || [], pageTotal }
     } else {
       return []
+    }
+  },
+})
+
+export const JoinFavoriteAndSearchListAtom = selector({
+  key: 'JoinFavoriteAndSearchListAtom',
+  get: ({ get }) => {
+    // 즐겨찾기 데이터 결합 후 movieListAtom 담기
+    const getSearchData = cloneDeep(get(MovieListAtom)) // 동기적으로 호출한다.
+    const favoriteList = get(FavoriteListAtom) // 동기적으로 호출한다.
+    console.log(favoriteList, 'ffff')
+    console.log(getSearchData, 'getSearchData Atom')
+    const newDate = getSearchData.map(movie => {
+      const target = findIndex(favoriteList, { imdbID: movie.imdbID })
+      movie.favorite = target > -1 ? true : false
+      return movie
+    })
+
+    console.log(newDate, 'newDate:::: getg')
+
+    return newDate
+  },
+  set: ({ set, reset }, newValue) => {
+    if (isEmpty(newValue)) {
+      reset(MovieListAtom)
+    } else {
+      set(MovieListAtom, newValue)
     }
   },
 })

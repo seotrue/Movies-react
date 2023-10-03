@@ -1,7 +1,13 @@
 import useInput from '../hook/useInput'
 import { Input, SearBar } from './styledComponents'
-import { MovieListAtom, MovieListQueryAtom, SearchMoviesListAtom, TotalPageAtom } from '../services/Atom'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import {
+  JoinFavoriteAndSearchListAtom,
+  MovieListAtom,
+  MovieListQueryAtom,
+  SearchMoviesListAtom,
+  TotalPageAtom,
+} from '../services/Atom'
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { useEffect } from 'react'
 
 const Search = () => {
@@ -10,6 +16,8 @@ const Search = () => {
   const [searchData] = useRecoilState(SearchMoviesListAtom)
   const [, setMovieList] = useRecoilState(MovieListAtom)
   const setTotalPage = useSetRecoilState(TotalPageAtom)
+  //const resetCookies = useResetRecoilState(MovieListAtom)
+  const resetCookies = useResetRecoilState(JoinFavoriteAndSearchListAtom)
 
   useEffect(() => {
     // 검색 쿼리로 초기화
@@ -20,6 +28,9 @@ const Search = () => {
 
   const handleSearchMovie = e => {
     e.preventDefault()
+    resetCookies([])
+    setMovieList([])
+    console.log('리셋?????')
     // movieListQueryAtom 쿼리 디스패치
     setMovieListQuery({
       keyword: searchKeyword,
@@ -30,7 +41,7 @@ const Search = () => {
   return (
     <SearBar>
       <Input placeholder={'영화를 검색해 주세요'} value={searchKeyword} onChange={onChangeSearchKeyword} />
-      <div onClick={e => handleSearchMovie(e)}>버튼</div>
+      <button onClick={e => handleSearchMovie(e)}>버튼</button>
     </SearBar>
   )
 }
